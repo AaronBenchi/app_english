@@ -1,0 +1,23 @@
+/* Estilo para el marcador circular */
+.marcador-circular {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #92C7D6;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* styles.css */
+.button-green {
+    background-color: #00FF00;
+    color: black;
+}
+
+.button-red {
+    background-color: #FF0000;
+}
