@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 import random
-from streamlit_extras.stylable_container import stylable_container # Estilo de los botones
+#from streamlit_extras.stylable_container import stylable_container # Estilo de los botones
 
 # Leer el contenido del archivo CSS
 with open("mi_estilo.css", "r") as f:
