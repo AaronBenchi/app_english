@@ -1,14 +1,7 @@
-# Ejecutar en la terminal streamlit run app1.py
+# Ejecutar en la terminal streamlit run app.py
 import streamlit as st
 import pandas as pd
 import random
-
-# Montar Google Drive
-from google.colab import drive
-drive.mount('/content/drive')
-
-# Ruta de la carpeta en Google Drive
-carpeta_destino = "/content/drive/My Drive/tarjeta1"
 
 # Leer CSS
 with open("mi_estilo.css", "r") as f:
@@ -88,7 +81,7 @@ if tarjeta_seleccionada:
         # AUDIO
         # Llamada a la función para obtener la palabra inicial y su índice de fila
         indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
-        ruta_audio = f"{carpeta_destino}/audio_{indice_fila_palabra_inicial}.wav"
+        ruta_audio = f"https://drive.google.com/uc?id={indice_fila_palabra_inicial}"
         st.audio(ruta_audio, format="audio/wav", start_time=0, sample_rate=None)
 
         # Barra de progreso
