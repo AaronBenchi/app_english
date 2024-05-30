@@ -63,7 +63,6 @@ if tarjeta_seleccionada:
         palabra_spelling = palabra_inicial['speling'].values[0]
         palabra_EN = palabra_inicial['palabra_EN'].values[0]
         palabra_ES = palabra_inicial['palabra_ES'].values[0]
-        audio_file = palabra_inicial['audio_file'].values[0]
 
         c1, c2, c3 = st.columns([7, 7, 2])
         # marcador número de palabras
@@ -81,7 +80,8 @@ if tarjeta_seleccionada:
 
         # AUDIO
         # Llamada a la función para obtener la palabra inicial y su índice de fila
-        ruta_audio = f"/content/drive/My Drive/tarjeta1/{audio_file}"
+        indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
+        ruta_audio = f"https://drive.google.com/uc?id={indice_fila_palabra_inicial}"
         st.audio(ruta_audio, format="audio/wav", start_time=0, sample_rate=None)
 
         # Barra de progreso
