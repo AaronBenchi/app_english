@@ -1,11 +1,19 @@
-# Ejecutar en la terminal streamlit run app.py
-from google.colab import drive
-drive.mount('/content/drive')
-
-# Ejecutar en la terminal streamlit run app.py
 import streamlit as st
 import pandas as pd
 import random
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+import os
+
+# Autenticar con Google Drive
+@st.cache_resource
+def authenticate_drive():
+    gauth = GoogleAuth()
+    gauth.LocalWebserverAuth()  # Esto abrirá una ventana para que te autentiques
+    drive = GoogleDrive(gauth)
+    return drive
+
+drive = authenticate_drive()
 
 # Leer CSS
 with open("mi_estilo.css", "r") as f:
@@ -29,6 +37,12 @@ def obtener_palabra_prioridad():
 def cargar_datos_google_sheets(sheet_id, sheet_name):
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
     return pd.read_csv(url)
+
+# Función para descargar un archivo de Google Drive
+def descargar_audio(drive, file_id, file_name):
+    file = drive.CreateFile({'id': file_id})
+    file.GetContentFile(file_name)
+    return file_name
 
 #####  DECLARAR FUNCIONES #####
 
@@ -67,7 +81,7 @@ if tarjeta_seleccionada:
         palabra_spelling = palabra_inicial['speling'].values[0]
         palabra_EN = palabra_inicial['palabra_EN'].values[0]
         palabra_ES = palabra_inicial['palabra_ES'].values[0]
-        audio_file = palabra_inicial['audio_file'].values[0]
+        file_id = palabra_inicial['file_id'].values[0]
 
         c1, c2, c3 = st.columns([7, 7, 2])
         # marcador número de palabras
@@ -84,8 +98,8 @@ if tarjeta_seleccionada:
             st.write(f'<img src="https://definicion.de/wp-content/uploads/2011/06/pronunciacion-1.png" width="20"> {palabra_spelling}', unsafe_allow_html=True, align="right")
 
         # AUDIO
-        # Llamada a la función para obtener la palabra inicial y su índice de fila
-        ruta_audio = f"/content/drive/My Drive/tarjeta1/{audio_file}"
+        # Descargar el archivo de audio
+        ruta_audio = descargar_audio(drive, file_id, f"audio_{indice_fila_palabra_inicial}.wav")
         st.audio(ruta_audio, format="audio/wav", start_time=0, sample_rate=None)
 
         # Barra de progreso
