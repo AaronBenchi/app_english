@@ -1,7 +1,14 @@
-# Ejecutar en la terminal streamlit run app.py
+# Ejecutar en la terminal streamlit run app1.py
 import streamlit as st
 import pandas as pd
 import random
+
+# Montar Google Drive
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Ruta de la carpeta en Google Drive
+carpeta_destino = "/content/drive/My Drive/tarjeta1"
 
 # Leer CSS
 with open("mi_estilo.css", "r") as f:
@@ -25,10 +32,6 @@ def obtener_palabra_prioridad():
 def cargar_datos_google_sheets(sheet_id, sheet_name):
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
     return pd.read_csv(url)
-
-# Función para obtener la URL del archivo de audio en Google Drive
-def obtener_url_audio(audio_id):
-    return f"https://drive.google.com/uc?id={audio_id}"
 
 #####  DECLARAR FUNCIONES #####
 
@@ -67,7 +70,6 @@ if tarjeta_seleccionada:
         palabra_spelling = palabra_inicial['speling'].values[0]
         palabra_EN = palabra_inicial['palabra_EN'].values[0]
         palabra_ES = palabra_inicial['palabra_ES'].values[0]
-        audio_id = palabra_inicial['audio_id'].values[0]  # Asegúrate de que esta columna exista en tu hoja de Google Sheets
 
         c1, c2, c3 = st.columns([7, 7, 2])
         # marcador número de palabras
@@ -84,8 +86,9 @@ if tarjeta_seleccionada:
             st.write(f'<img src="https://definicion.de/wp-content/uploads/2011/06/pronunciacion-1.png" width="20"> {palabra_spelling}', unsafe_allow_html=True, align="right")
 
         # AUDIO
-        # Obtener la URL del archivo de audio en Google Drive
-        ruta_audio = obtener_url_audio(audio_id)
+        # Llamada a la función para obtener la palabra inicial y su índice de fila
+        indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
+        ruta_audio = f"{carpeta_destino}/audio_{indice_fila_palabra_inicial}.wav"
         st.audio(ruta_audio, format="audio/wav", start_time=0, sample_rate=None)
 
         # Barra de progreso
