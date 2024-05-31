@@ -134,7 +134,5 @@ if tarjeta_seleccionada:
                 iteraciones += 1
                 st.session_state['iteraciones'] = iteraciones
                 progreso.progress(iteraciones / max_iteraciones)
-        else:
-            st.write("No hay palabras disponibles para esta frecuencia en este momento.")
     else:
         st.write("Finalizado con éxito")
