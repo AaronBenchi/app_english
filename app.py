@@ -11,7 +11,6 @@ with st.sidebar:
                            icons=['house', 
                                   'gear', 
                                   'kanban'], 
-                                  
                            menu_icon="cast", default_index=0)
 
 # Mostrar el contenido de cada pestaña
@@ -22,9 +21,7 @@ if selected == "App 1: Memorizar Inglés":
     st.title("App 1: Memorizar Inglés")
     st.write("App 1: Memorizar Inglés")
     
-    # streamlit run app.py
     import os
-    import streamlit as st
     import pandas as pd
     import random
     import requests
@@ -46,17 +43,9 @@ if selected == "App 1: Memorizar Inglés":
     def obtener_palabra_aleatoria():
         return df.sample(n=1)
 
-    # Función para obtener una palabra aleatoria con prioridad en la frecuencia
-    def obtener_palabra_prioridad():
-        frecuencia_prioritaria = random.randint(1, 3)
-        palabras_con_prioridad = df[df['frecuencia'] == frecuencia_prioritaria]
-        
-        # Verificar si hay al menos una fila en el DataFrame
-        if not palabras_con_prioridad.empty:
-            return palabras_con_prioridad.sample(n=1)
-        else:
-            # Si no hay filas, devolver None o algún valor predeterminado
-            return None
+    # Función para obtener la siguiente palabra en orden
+    def obtener_palabra_secuencial(index):
+        return df.iloc[[index % len(df)]]
 
     ##### Barra lateral #####
     st.sidebar.success("Escoge tu tarjeta")
@@ -81,15 +70,21 @@ if selected == "App 1: Memorizar Inglés":
         st.title("Let's learn English Aaron")
         st.markdown("---")
 
-        # Iteraciones máximas del usuario
-        max_iteraciones = 15
+        # Selección del número de iteraciones
+        max_iteraciones = st.sidebar.slider('Número de palabras', min_value=1, max_value=100, value=15)
+        
+        # Selección del modo de obtención de palabras
+        modo_seleccion = st.sidebar.selectbox("Modo de selección de palabras", ["Aleatorio", "Secuencial"], index=0)
 
         # Variable para contar las iteraciones
         iteraciones = st.session_state.get('iteraciones', 0)
 
         # Actualizar la información de la iteración y las palabras
         if iteraciones < max_iteraciones:
-            palabra_inicial = obtener_palabra_prioridad()
+            if modo_seleccion == "Aleatorio":
+                palabra_inicial = obtener_palabra_aleatoria()
+            else:
+                palabra_inicial = obtener_palabra_secuencial(iteraciones)
             
             # Verificar si se obtuvo una palabra válida
             if palabra_inicial is not None:
@@ -131,33 +126,15 @@ if selected == "App 1: Memorizar Inglés":
                     with c2:
                         st.image(palabra_inicial['link_imagen'].values[0], caption='Foto', width=100)
 
-                    st.write('¿Qué tan difícil fue para ti esta palabra?')
-
                 st.markdown("---")
-                # Actualizar frecuencia en función de la dificultad
+
                 if iteraciones < max_iteraciones:
-                    # Botones de dificultad
-                    st.markdown('<p style="text-align:center;">DIFICULTAD</p>', unsafe_allow_html=True)
-
-                    col1, col2, col3 = st.columns([7, 7, 2])
-
-                    with col1:
-                        facil_btn = st.button('Fácil')
+                    col1, col2, col3 = st.columns([1, 6, 1])
                     with col2:
-                        regular_btn = st.button('Regular')
-                    with col3:
-                        dificil_btn = st.button('Difícil')
-
-                    if facil_btn:
-                        df.loc[df['palabra_EN'] == palabra_EN, 'frecuencia'] = 1
-                    elif regular_btn:
-                        df.loc[df['palabra_EN'] == palabra_EN, 'frecuencia'] = 2
-                    elif dificil_btn:
-                        df.loc[df['palabra_EN'] == palabra_EN, 'frecuencia'] = 3
-
-                    iteraciones += 1
-                    st.session_state['iteraciones'] = iteraciones
-                    progreso.progress(iteraciones / max_iteraciones)
+                        if st.button('Siguiente'):
+                            iteraciones += 1
+                            st.session_state['iteraciones'] = iteraciones
+                            progreso.progress(iteraciones / max_iteraciones)
         else:
             st.write("Finalizado con éxito")
 
@@ -168,7 +145,6 @@ elif selected == "App 2: Eliminar Fondo":
     st.title("App 2: Eliminar Fondo")
     st.write("App 2: Eliminar Fondo")
     
-    # APP 2
     import streamlit as st
     from rembg import remove
     from PIL import Image
