@@ -1,25 +1,19 @@
 import streamlit as st
-from elevenlabs import ElevenLabs
-from io import BytesIO
-
-# Configura tu API key
-client = ElevenLabs(api_key="d8da938a8be28b4cc192033aa31d40c2")
+from elevenlabs import generate, play, save
 
 def get_audio(text, lang='es', speed=1.0):
-    # Configura los parámetros del audio
-    voice_params = {
-        'text': text,
-        'lang': lang,
-        'speed': speed
-    }
+    # Definir el tono y la velocidad de la voz según el texto
+    voice = "en_us_male"  # Cambia esto al ID de la voz que prefieras
+    audio = generate(
+        text=text,
+        voice=voice,
+        model="eleven_monolingual_v1",  # Modelo de voz
+        speed=speed,
+        language=lang
+    )
 
-    # Llama a la API para generar el audio
-    response = client.text_to_speech(**voice_params)
-    
-    # Guarda el archivo de audio en memoria
-    audio_file = BytesIO(response.content)
-    audio_file.seek(0)
-
+    # Guardar el archivo de audio en memoria
+    audio_file = BytesIO(audio)
     return audio_file
 
 st.title("Texto a Voz con Streamlit")
@@ -36,4 +30,4 @@ if st.button("Generar Audio"):
         audio_file = get_audio(text, lang, speed)
         st.audio(audio_file, format="audio/mp3")
     else:
-        st.warning("Por favor, introduce un texto.")
+        st.warning("Por favor, intr
