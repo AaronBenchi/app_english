@@ -30,4 +30,5 @@ if st.button("Generar Audio"):
         audio_file = get_audio(text, lang, speed)
         st.audio(audio_file, format="audio/mp3")
     else:
-        st.warning("Por favor, intr
+        st.warning("Por favor, introduce un texto.")
+
