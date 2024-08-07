@@ -38,7 +38,7 @@ if __name__ == "__main__":
     if selected == "Inicio":
         pagina_inicio()
     elif selected == "App 1: Memorizar Inglés":
-        st.markdown("<h1 style='font-size: 32px;'>App 1: Memorizar Inglés</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 32px;'><u>App 1: Memorizar Inglés</u></h1>", unsafe_allow_html=True)
      
         import pandas as pd
         import random
@@ -82,8 +82,6 @@ if __name__ == "__main__":
 
         # INICIO WEB
         if tarjeta_seleccionada:
-            # Configuración de la página
-            st.markdown("---")
 
             # Selección del número de iteraciones
             max_iteraciones = st.sidebar.slider('Número de palabras', min_value=1, max_value=100, value=15)
@@ -107,7 +105,7 @@ if __name__ == "__main__":
                     palabra_EN = palabra_inicial['palabra_EN'].values[0]
                     palabra_ES = palabra_inicial['palabra_ES'].values[0]
 
-                    c1, c2, c3, c4 = st.columns([6, 6, 4, 3])
+                    c1, c2, c3, c4 = st.columns([4, 4, 4, 5])
                     # marcador número de palabras
                     with c1:
                         # HTML para el marcador circular con la fracción
@@ -121,12 +119,9 @@ if __name__ == "__main__":
                     with c3:
                         st.write(f'<img src="https://definicion.de/wp-content/uploads/2011/06/pronunciacion-1.png" width="20"> {palabra_spelling}', unsafe_allow_html=True, align="right")
 
-                    c1, c2= st.columns([6, 2])
-                    with c1:
-                        # Barra de progreso
-                        progreso = st.progress(iteraciones / max_iteraciones)
 
-                    with c2:
+
+                    with c4:
                         # AUDIO
                         # Llamada a la función para obtener la palabra inicial y su índice de fila
                         indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
@@ -137,7 +132,15 @@ if __name__ == "__main__":
                         <audio controls style="outline:none;">
                             <source src="{ruta_audio}" type="audio/wav">
                         </audio>
-                        """, unsafe_allow_html=True)                    
+                        """, unsafe_allow_html=True)    
+
+
+
+
+                    # Barra de progreso
+                    progreso = st.progress(iteraciones / max_iteraciones)
+
+                
 
                     # Botón para mostrar la traducción y la pregunta sobre la dificultad
                     with st.expander("Mostrar"):
