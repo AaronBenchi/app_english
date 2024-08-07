@@ -38,8 +38,8 @@ if __name__ == "__main__":
     if selected == "Inicio":
         pagina_inicio()
     elif selected == "App 1: Memorizar Inglés":
-        st.title("App 1: Memorizar Inglés")
-        
+        st.markdown("<h1 style='font-size: 32px;'>App 1: Memorizar Inglés</h1>", unsafe_allow_html=True)
+     
         import pandas as pd
         import random
         import requests
@@ -142,13 +142,13 @@ if __name__ == "__main__":
                     # Botón para mostrar la traducción y la pregunta sobre la dificultad
                     with st.expander("Mostrar"):
 
-                        c1, c2 = st.columns([7, 2])
+                        c1, c2 = st.columns([7, 4])
                         with c1:
                             st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/USA.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
                             st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/Spain.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_ES}</span>', unsafe_allow_html=True)
-                            st.markdown(f"#### Meaning: {palabra_inicial['Significado'].values[0]}")
-                            st.markdown(f"#### Example: {palabra_inicial['Ejemplo'].values[0]}")                            
-                            
+                            st.markdown(f"#### <u>Meaning:</u> {palabra_inicial['Significado'].values[0]}", unsafe_allow_html=True)
+                            st.markdown(f"#### <u>Example:</u> {palabra_inicial['Ejemplo'].values[0]}", unsafe_allow_html=True)
+                                                       
                             
                         with c2:
                             st.image(palabra_inicial['link_imagen'].values[0], caption=f'{palabra_EN}', width=300)
@@ -164,15 +164,12 @@ if __name__ == "__main__":
                 st.write("Finalizado con éxito")
 
     elif selected == "App 2: Eliminar Fondo":
-        st.title("App 2: Eliminar Fondo")
-        st.write("App 2: Eliminar Fondo")
+        st.markdown("<h1 style='font-size: 32px;'>App 2: Eliminador de Fondos de Imágenes</h1>", unsafe_allow_html=True)
         
         from rembg import remove
         from PIL import Image
         import io
         import time
-        
-        st.title("Eliminador de Fondos de Imágenes")
         
         uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
         
@@ -212,5 +209,5 @@ if __name__ == "__main__":
                     )
 
     elif selected == "App 3":
-        st.title("App 3")
+        st.markdown("<h1 style='font-size: 32px;'>App 3:</h1>", unsafe_allow_html=True)
         st.write("Contenido de la App 3")
