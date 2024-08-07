@@ -1,8 +1,8 @@
-# streamlit run apps.py
 import streamlit as st
 from streamlit_lottie import st_lottie
 import json
 from streamlit_option_menu import option_menu
+
 # Configuración de la página
 st.set_page_config(page_title="Aaron Apps", page_icon="🚀", layout="wide")
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
                     palabra_EN = palabra_inicial['palabra_EN'].values[0]
                     palabra_ES = palabra_inicial['palabra_ES'].values[0]
 
-                    c1, c2, c3 = st.columns([7, 7, 2])
+                    c1, c2, c3, c4 = st.columns([6, 6, 4, 3])
                     # marcador número de palabras
                     with c1:
                         # HTML para el marcador circular con la fracción
@@ -116,36 +116,46 @@ if __name__ == "__main__":
                         st.markdown(marcador_html, unsafe_allow_html=True)
                     # Palabra en inglés
                     with c2:
-                        st.write(f'<img src="https://icons.veryicon.com/png/Flag/Not%20a%20Patriot/USA%20Flag.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
+                        st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/USA.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
                     # Pronunciación
                     with c3:
                         st.write(f'<img src="https://definicion.de/wp-content/uploads/2011/06/pronunciacion-1.png" width="20"> {palabra_spelling}', unsafe_allow_html=True, align="right")
 
-                    # AUDIO
-                    # Llamada a la función para obtener la palabra inicial y su índice de fila
-                    indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
-                    ruta_audio = f"https://github.com/AaronBenchi/app_english/blob/main/tarjeta1/audio_{indice_fila_palabra_inicial}.wav?raw=true"
-                    st.audio(ruta_audio, format="audio/wav", start_time=0, sample_rate=None)
+                    c1, c2= st.columns([6, 2])
+                    with c1:
+                        # Barra de progreso
+                        progreso = st.progress(iteraciones / max_iteraciones)
 
-                    # Barra de progreso
-                    progreso = st.progress(iteraciones / max_iteraciones)
+                    with c2:
+                        # AUDIO
+                        # Llamada a la función para obtener la palabra inicial y su índice de fila
+                        indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
+                        ruta_audio = f"https://github.com/AaronBenchi/app_english/blob/main/tarjeta1/audio_{indice_fila_palabra_inicial}.wav?raw=true"
+                        
+                        # Prsonalizar boton play audio
+                        st.markdown(f"""
+                        <audio controls style="outline:none;">
+                            <source src="{ruta_audio}" type="audio/wav">
+                        </audio>
+                        """, unsafe_allow_html=True)                    
 
                     # Botón para mostrar la traducción y la pregunta sobre la dificultad
                     with st.expander("Mostrar"):
-                        st.write(f'# {palabra_EN}')
-                        st.write(f'# {palabra_ES}')
 
-                        c1, c2 = st.columns([7, 7])
+                        c1, c2 = st.columns([7, 2])
                         with c1:
+                            st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/USA.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
+                            st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/Spain.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_ES}</span>', unsafe_allow_html=True)
                             st.markdown(f"#### Meaning: {palabra_inicial['Significado'].values[0]}")
+                            st.markdown(f"#### Example: {palabra_inicial['Ejemplo'].values[0]}")                            
+                            
+                            
                         with c2:
-                            st.image(palabra_inicial['link_imagen'].values[0], caption='Foto', width=100)
-
-                    st.markdown("---")
+                            st.image(palabra_inicial['link_imagen'].values[0], caption=f'{palabra_EN}', width=300)
 
                     if iteraciones < max_iteraciones:
                         col1, col2, col3 = st.columns([1, 6, 1])
-                        with col2:
+                        with col3:
                             if st.button('Siguiente'):
                                 iteraciones += 1
                                 st.session_state['iteraciones'] = iteraciones
