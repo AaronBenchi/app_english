@@ -4,7 +4,8 @@ from streamlit_lottie import st_lottie
 import json
 from streamlit_option_menu import option_menu
 # Configuración de la página
-st.set_page_config(page_title="Mi Aplicación", page_icon="", layout="wide")
+st.set_page_config(page_title="Aaron Apps", page_icon="🚀", layout="wide")
+
 # Función para cargar la animación
 def cargar_animacion(ruta_animacion):
     with open(ruta_animacion) as f:
