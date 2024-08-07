@@ -1,11 +1,18 @@
+# streamlit run apps.py
 import streamlit as st
 from streamlit_lottie import st_lottie
 import json
 from streamlit_option_menu import option_menu
-
+import pandas as pd
+import random
+import requests
+from rembg import remove
+from PIL import Image
+import io
+import time
+        
 # Configuración de la página
 st.set_page_config(page_title="Aaron Apps", page_icon="🚀", layout="wide")
-
 # Función para cargar la animación
 def cargar_animacion(ruta_animacion):
     with open(ruta_animacion) as f:
@@ -39,10 +46,8 @@ if __name__ == "__main__":
         pagina_inicio()
     elif selected == "App 1: Memorizar Inglés":
         st.markdown("<h1 style='font-size: 32px;'><u>App 1: Memorizar Inglés</u></h1>", unsafe_allow_html=True)
-     
-        import pandas as pd
-        import random
-        import requests
+
+
 
         # Función para cargar datos desde Google Sheets
         def cargar_datos_google_sheets(sheet_id, sheet_name):
@@ -63,9 +68,6 @@ if __name__ == "__main__":
         # Función para obtener la siguiente palabra en orden
         def obtener_palabra_secuencial(index):
             return df.iloc[[index % len(df)]]
-
-        # Barra lateral
-        st.sidebar.success("Escoge tu tarjeta")
 
         # Lista de tarjetas disponibles
         tarjetas = {
@@ -105,7 +107,7 @@ if __name__ == "__main__":
                     palabra_EN = palabra_inicial['palabra_EN'].values[0]
                     palabra_ES = palabra_inicial['palabra_ES'].values[0]
 
-                    c1, c2, c3, c4 = st.columns([4, 4, 4, 5])
+                    c1, c2, c3 = st.columns([7, 7, 2])
                     # marcador número de palabras
                     with c1:
                         # HTML para el marcador circular con la fracción
@@ -114,45 +116,29 @@ if __name__ == "__main__":
                         st.markdown(marcador_html, unsafe_allow_html=True)
                     # Palabra en inglés
                     with c2:
-                        st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/USA.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
+                        st.write(f'<img src="https://icons.veryicon.com/png/Flag/Not%20a%20Patriot/USA%20Flag.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
                     # Pronunciación
                     with c3:
                         st.write(f'<img src="https://definicion.de/wp-content/uploads/2011/06/pronunciacion-1.png" width="20"> {palabra_spelling}', unsafe_allow_html=True, align="right")
 
-
-
-                    with c4:
-                        # AUDIO
-                        # Llamada a la función para obtener la palabra inicial y su índice de fila
-                        indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
-                        ruta_audio = f"https://github.com/AaronBenchi/app_english/blob/main/tarjeta1/audio_{indice_fila_palabra_inicial}.wav?raw=true"
-                        
-                        # Prsonalizar boton play audio
-                        st.markdown(f"""
-                        <audio controls style="outline:none;">
-                            <source src="{ruta_audio}" type="audio/wav">
-                        </audio>
-                        """, unsafe_allow_html=True)    
-
-
-
+                    # AUDIO
+                    # Llamada a la función para obtener la palabra inicial y su índice de fila
+                    indice_fila_palabra_inicial = df[df['palabra_EN'] == palabra_EN].index[0]
+                    ruta_audio = f"https://github.com/AaronBenchi/app_english/blob/main/tarjeta1/audio_{indice_fila_palabra_inicial}.wav?raw=true"
+                    st.audio(ruta_audio, format="audio/wav", start_time=0, sample_rate=None)
 
                     # Barra de progreso
                     progreso = st.progress(iteraciones / max_iteraciones)
 
-                
-
                     # Botón para mostrar la traducción y la pregunta sobre la dificultad
                     with st.expander("Mostrar"):
-
                         c1, c2 = st.columns([7, 4])
                         with c1:
                             st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/USA.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_EN}</span>', unsafe_allow_html=True)
                             st.write(f'<img src="https://icons.veryicon.com/png/Flag/2014%20World%20Cup%20Flags/Spain.png" width="20"> <span style="font-size: 16px; font-weight: bold;">{palabra_ES}</span>', unsafe_allow_html=True)
                             st.markdown(f"#### <u>Meaning:</u> {palabra_inicial['Significado'].values[0]}", unsafe_allow_html=True)
                             st.markdown(f"#### <u>Example:</u> {palabra_inicial['Ejemplo'].values[0]}", unsafe_allow_html=True)
-                                                       
-                            
+
                         with c2:
                             st.image(palabra_inicial['link_imagen'].values[0], caption=f'{palabra_EN}', width=300)
 
@@ -167,12 +153,11 @@ if __name__ == "__main__":
                 st.write("Finalizado con éxito")
 
     elif selected == "App 2: Eliminar Fondo":
-        st.markdown("<h1 style='font-size: 32px;'>App 2: Eliminador de Fondos de Imágenes</h1>", unsafe_allow_html=True)
+        st.title("App 2: Eliminar Fondo")
+        st.write("App 2: Eliminar Fondo")
         
-        from rembg import remove
-        from PIL import Image
-        import io
-        import time
+
+        st.title("Eliminador de Fondos de Imágenes")
         
         uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
         
@@ -212,5 +197,5 @@ if __name__ == "__main__":
                     )
 
     elif selected == "App 3":
-        st.markdown("<h1 style='font-size: 32px;'>App 3:</h1>", unsafe_allow_html=True)
+        st.title("App 3")
         st.write("Contenido de la App 3")
