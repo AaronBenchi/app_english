@@ -13,6 +13,7 @@ import time
         
 # Configuración de la página
 st.set_page_config(page_title="Aaron Apps", page_icon="🚀", layout="wide")
+
 # Función para cargar la animación
 def cargar_animacion(ruta_animacion):
     with open(ruta_animacion) as f:
@@ -47,8 +48,6 @@ if __name__ == "__main__":
     elif selected == "App 1: Memorizar Inglés":
         st.markdown("<h1 style='font-size: 32px;'><u>App 1: Memorizar Inglés</u></h1>", unsafe_allow_html=True)
 
-
-
         # Función para cargar datos desde Google Sheets
         def cargar_datos_google_sheets(sheet_id, sheet_name):
             url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
@@ -69,6 +68,11 @@ if __name__ == "__main__":
         def obtener_palabra_secuencial(index):
             return df.iloc[[index % len(df)]]
 
+        # Función para obtener palabras dentro de un rango
+        def obtener_palabra_rango(inicio, fin, index):
+            rango_df = df.iloc[inicio:fin]
+            return rango_df.iloc[[index % len(rango_df)]]
+
         # Lista de tarjetas disponibles
         tarjetas = {
             "Tarjeta 1": "1O9vblqik8g99ZuQ3tugubDW6VyWnzk1pwMTjsXOla6I"
@@ -84,12 +88,20 @@ if __name__ == "__main__":
 
         # INICIO WEB
         if tarjeta_seleccionada:
-
             # Selección del número de iteraciones
             max_iteraciones = st.sidebar.slider('Número de palabras', min_value=1, max_value=100, value=15)
             
             # Selección del modo de obtención de palabras
-            modo_seleccion = st.sidebar.selectbox("Modo de selección de palabras", ["Aleatorio", "Secuencial"], index=0)
+            modo_seleccion = st.sidebar.selectbox("Modo de selección de palabras", ["Aleatorio", "Secuencial", "Rango"], index=0)
+
+            # Selección del rango si el modo es "Rango"
+            if modo_seleccion == "Rango":
+                rango_inicio, rango_fin = st.sidebar.slider(
+                    'Selecciona el rango',
+                    min_value=0, 
+                    max_value=len(df)-1, 
+                    value=(15, len(df)-1)
+                )
 
             # Variable para contar las iteraciones
             iteraciones = st.session_state.get('iteraciones', 0)
@@ -98,8 +110,10 @@ if __name__ == "__main__":
             if iteraciones < max_iteraciones:
                 if modo_seleccion == "Aleatorio":
                     palabra_inicial = obtener_palabra_aleatoria()
-                else:
+                elif modo_seleccion == "Secuencial":
                     palabra_inicial = obtener_palabra_secuencial(iteraciones)
+                elif modo_seleccion == "Rango":
+                    palabra_inicial = obtener_palabra_rango(rango_inicio, rango_fin + 1, iteraciones)
                 
                 # Verificar si se obtuvo una palabra válida
                 if palabra_inicial is not None:
